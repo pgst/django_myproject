@@ -1,0 +1,20 @@
+services:
+    # サーバー
+    django:
+        container_name: "django"
+        # Dockerfileをビルド
+        build:
+            context: .
+            dockerfile: Dockerfile
+        tty: true
+        # プロジェクトをバインドマウント
+        volumes:
+            - ../:/workspace
+        # ポートマッピングを指定
+        ports:
+            - 8000:8000
+        # # コンテナ内でのコマンドを指定（ターミナルに表示したまま）
+        # command: sh -c "python manage.py runserver 0.0.0.0:8000 && tail -f /dev/null"
+networks:
+    default:
+        driver: bridge

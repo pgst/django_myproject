@@ -1,0 +1,38 @@
+{
+    // コンテナ名
+    "name": "dockerdjango",
+
+    // コンテナ作成に使うdocker-composeファイルの相対パス
+    "dockerComposeFile": "../docker/compose.yaml",
+
+    // サービス名
+    "service": "django",
+
+    // コンテナ内のプロジェクトのルートフォルダを指定
+    "workspaceFolder": "/workspace",
+
+    // コンテナ停止時のアクション
+    "shutdownAction": "stopCompose",
+
+    // コンテナに入れるVScodeの拡張機能
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "intellsmi.comment-translate",
+                "ms-azuretools.vscode-docker",
+                "VisualStudioExptTeam.vscodeintellicode",
+                "VisualStudioExptTeam.intellicode-api-usage-examples",
+                "Zignd.html-css-class-completion",
+                "ritwickdey.LiveServer",
+                "ms-vsliveshare.vsliveshare",
+                "christian-kohler.path-intellisense",
+                "mechatroner.rainbow-csv",
+                "shardulm94.trailing-spaces",
+                "batisteo.vscode-django",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "qwtel.sqlite-viewer"
+            ]
+        }
+    }
+}
