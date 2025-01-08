@@ -3,6 +3,10 @@ from .models import Article
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from .forms import SearchForm  # forms.pyからSearchFormをインポート
+# ログインしていないユーザーをリダイレクトするためにインポート
+from django.contrib.auth.mixins import LoginRequiredMixin
+# ログインしていないユーザーに対して403エラーを返すためにインポート
+from django.core.exceptions import PermissionDenied
 
 
 # IndexViewクラスを作成
@@ -19,21 +23,27 @@ class DetailView(generic.DetailView):
 
 
 # CreateViewクラスを作成
-class CreateView(generic.CreateView):
+class CreateView(LoginRequiredMixin, generic.edit.CreateView):
     model = Article
     template_name = 'bbs/create.html'
     fields = '__all__'
 
 
 # UpdateViewクラスを作成
-class UpdateView(generic.UpdateView):
+class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
     model = Article
     template_name = 'bbs/create.html'
-    fields = '__all__'
+    fields = ['content']
+
+    def dispatch(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if obj.author != self.request.user:
+            raise PermissionDenied('編集権限がありません')
+        return super(UpdateView, self).dispatch(request, *args, **kwargs)
 
 
 # DeleteViewクラスを作成
-class DeleteView(generic.edit.DeleteView):
+class DeleteView(LoginRequiredMixin, generic.edit.DeleteView):
     model = Article
     template_name = 'bbs/delete.html'
     success_url = reverse_lazy('bbs:index')
@@ -50,4 +60,5 @@ def search(request):
         query = searchform.cleaned_data['query']
         # クエリを含むレコードをfilterメソッドで取り出し、articlesに代入
         articles = Article.objects.filter(content__icontains=query)
-        return render(request, 'bbs/results.html', {'articles': articles, 'searchform': searchform})
+        return render(request, 'bbs/results.html',
+                      {'articles': articles, 'searchform': searchform})

@@ -10,20 +10,25 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
+import environ
 from pathlib import Path
+
 
 # プロジェクト内のパスをこのように構築します: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# 環境変数を読み込む
+env = environ.Env()
+env.read_env(env_file='.env')
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+
+
 # クイックスタート開発設定 - 本番環境には不適切
 # https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/ を参照してください
-
-# セキュリティ警告: 本番環境で使用するシークレットキーは秘密にしてください!
-SECRET_KEY = 'django-insecure-uh$1wfi)as(0f6bxp5rbkskj+*wk6)%vuyk8f72qdd7ggd5ycn'
-
-# セキュリティ警告: 本番環境ではデバッグをオンにしないでください!
-DEBUG = True
 
 # 本番環境ではホスト名を指定してください
 ALLOWED_HOSTS = ['*']
@@ -38,9 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hello.apps.HelloConfig',  # helloアプリケーションを追加
-    'bbs.apps.BbsConfig',  # bbsアプリケーションを追加
-    'django_bootstrap5',  # django-bootstrap5を追加
+    'hello.apps.HelloConfig',        # helloアプリケーションを追加
+    'bbs.apps.BbsConfig',            # bbsアプリケーションを追加
+    'django_bootstrap5',             # django-bootstrap5を追加
+    'accounts.apps.AccountsConfig',  # accountsアプリケーションを追加
 ]
 
 MIDDLEWARE = [
@@ -75,17 +81,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# データベース
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
 # パスワード検証
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -103,6 +98,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# データベース
+DATABASES = {
+    'default': {
+        'ENGINE': env.get_value('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': env.get_value('DATABASE_DB', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': env.get_value('DATABASE_USER', default='django_user'),
+        'PASSWORD': env.get_value('DATABASE_PASSWORD', default='password'),
+        'HOST': env.get_value('DATABASE_HOST', default='localhost'),
+        'PORT': env.get_value('DATABASE_PORT', default='5432'),
+    }
+}
 
 
 # 国際化
@@ -129,3 +137,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/bbs/'  # ログイン後のリダイレクト先

@@ -31,7 +31,8 @@
                 "batisteo.vscode-django",
                 "ms-python.python",
                 "ms-python.vscode-pylance",
-                "qwtel.sqlite-viewer"
+                "qwtel.sqlite-viewer",
+                "mikestead.dotenv"
             ]
         }
     }

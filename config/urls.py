@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/', include('hello.urls')),
     path('bbs/', include('bbs.urls')),
-    path('', RedirectView.as_view(url='/bbs/')),  # bbsアプリケーションのURLにリダイレクト
+    path('', RedirectView.as_view(url='/bbs/')),             # bbsアプリケーションのURLにリダイレクト
+    path('accounts/', include('accounts.urls')),             # accountsアプリケーションのURL
+    path('accounts/', include('django.contrib.auth.urls')),  # 認証ビューを使用するためのURL
 ]
