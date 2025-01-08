@@ -1,14 +1,22 @@
 {% extends "base.html" %}
+<!-- カスタムテンプレートタグの読み込み -->
+{% load django_bootstrap5 %}
 
 {% block content %}
-<h1>CRUDアプリを使ってみよう</h1>
+<h1 class="mt-5">CRUDアプリを作ってみよう</h1>
     {% for article in object_list %}
-    <div class="container">
-        <p>{{ article.id }} : {{ article.author }} : {{ article.created_at }}</p>
-        <p><a href="{% url 'bbs:detail' article.id %}">{{ article.content }}</a></p>
+    <div class="card bg-light shadow-sm mt-3">
+        <div class="card-body">
+            <p>{{ article.id }} : {{ article.author }} : {{ article.created_at }}</p>
+            <p><a href="{% url 'bbs:detail' article.id %}">{{ article.content }}</a></p>
+        </div>
     </div>
     {% endfor %}
-    <div>
-        <button onclick="location.href='{% url 'bbs:create' %}'">新規投稿</button>
+
+    <div class="mt-3">
+        <a href="{% url 'bbs:create' %}">
+            <!-- テンプレートタグでボタンを設置 -->
+            {% bootstrap_button button_type='submit' content='新規投稿' size='md' %}
+        </a>
     </div>
 {% endblock %}

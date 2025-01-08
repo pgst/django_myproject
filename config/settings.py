@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hello.apps.HelloConfig',  # helloアプリケーションを追加
     'bbs.apps.BbsConfig',  # bbsアプリケーションを追加
+    'django_bootstrap5',  # django-bootstrap5を追加
 ]
 
 MIDDLEWARE = [
@@ -65,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'bbs.context_processors.search_form',  # bbsアプリケーションのcontext_processors.pyを追加
             ],
         },
     },
